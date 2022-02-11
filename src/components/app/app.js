@@ -19,9 +19,9 @@ class App extends Component {
 
         this.state = {
             data: [
-                {name: 'John C.', salary: 800, increase: false, id: nextId()},
-                {name: 'Alex M.', salary: 3000, increase: true, id: nextId()},
-                {name: 'Carl W.', salary: 5000, increase: false, id: nextId()}
+                {name: 'John C.', salary: 800, increase: false, rise: true, id: nextId()},
+                {name: 'Alex M.', salary: 3000, increase: true, rise: false, id: nextId()},
+                {name: 'Carl W.', salary: 5000, increase: false, rise: false, id: nextId()}
             ]
         }
 
@@ -29,11 +29,6 @@ class App extends Component {
 
     deleteItem = (id) => {
         this.setState(({data}) => {
-            //const index = data.findIndex(elem => elem.id === id);
-            // const before = data.slice(0, index);
-            // const after = data.slice(index + 1);
-            // const newArr = [...before, ...after];
-
             return {
                 data: data.filter(item => item.id !== id)
             }
@@ -45,6 +40,7 @@ class App extends Component {
             name: name,
             salary: salary,
             increase: false,
+            rise: false,
             id: nextId()
         }
 
@@ -52,32 +48,41 @@ class App extends Component {
 
             let newData = [...data, newItem];
 
-            // let newData = [];
-
-            // data.forEach((item, key) => {
-            //     newData[key] = item;
-            // })
-
-            // newData.push(newItem);
-
             return {
                 data: newData
             }
         })
     }
 
+    onToggleProp = (id, prop) => {
+        this.setState(({data}) => ({
+            data: data.map(item => {
+                if (item.id === id) {
+                    return {...item, [prop]: !item[prop]}
+                }
+                return item;
+            })
+        }))
+    }
+
+    onToggRise = (id) => {
+        console.log(`Rise this ${id}`);
+    }
+
+
+
     render() {
-    
         return (
             <div className="app">
-                <AppInfo/>
+                <AppInfo data={this.state.data}/>
                 <div className="search-panel">
                     <SearchPanel/>
                     <AppFilter/>
                 </div>
                 <EmployeeList 
                     data={this.state.data}
-                    onDelete={this.deleteItem}/>
+                    onDelete={this.deleteItem}
+                    onToggleProp={this.onToggleProp}/>
                 <EmployeeAddForm onAdd={this.addItem}/>
             </div>
         );
